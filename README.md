@@ -15,7 +15,7 @@ You are required to build a User Management System using Spring Boot. Follow the
   - Spring Data JPA
   - Spring Security
   - JWT (JSON Web Token)
-  - H2 Database (or any lightweight database for testing)
+  - MySQl Database
 
 ### 2. Implement User and Role Management
 
