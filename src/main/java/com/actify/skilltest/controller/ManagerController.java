@@ -57,7 +57,10 @@ public class ManagerController {
 
     // assign task to user,
     @PostMapping("/assignTask")
-    public ResponseEntity<TaskDTO> assignTask(@RequestBody Task task, @AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<?> assignTask(@RequestBody Task task, @AuthenticationPrincipal UserDetails userDetails){
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not authenticated!");
+        }
         String email = userDetails.getUsername();
         User user = userService.findByEmail(email);
         System.out.println("this is task"+ task);

@@ -16,6 +16,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,9 +33,19 @@ import lombok.Setter;
 public class User implements UserDetails {
     @Id
     private String id;
+
+    @NotBlank(message = "Name cannot be empty")
     private String name;
+
     @Column(unique = true)
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email cannot be empty")
     private String email;
+
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 6, message = "Password must be at least 8 characters long")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", 
+             message = "Password must contain at least 1 uppercase letter, 1 digit, and 1 special character")
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)

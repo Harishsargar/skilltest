@@ -18,6 +18,8 @@ import com.actify.skilltest.Service.UserService;
 import com.actify.skilltest.dto.UserWithRolesDTO;
 import com.actify.skilltest.entity.User;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -27,7 +29,7 @@ public class AdminController {
 
     // create user
     @PostMapping("/createUser")
-    public ResponseEntity<User> createUser(@RequestBody User user){
+    public ResponseEntity<User> createUser(@Valid @RequestBody User user){
         User savedUser = userService.saveUser(user);
         return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }

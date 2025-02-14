@@ -12,6 +12,7 @@ import com.actify.skilltest.entity.Task;
 import com.actify.skilltest.entity.User;
 import com.actify.skilltest.repository.TaskRepo;
 import com.actify.skilltest.repository.UserRepo;
+import com.actify.skilltest.util.CustomRuntimeException;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -29,9 +30,15 @@ public class TaskServiceImpl implements TaskService {
         // if (task.getUser() == null || task.getManager() == null) {
         //     throw new IllegalArgumentException("User and Manager must not be ...null");
         // }
+        
         User user = userRepo.findById(task.getUser().getId()).orElseThrow(() -> new RuntimeException("User not found"));
-        User manager = userRepo.findById(managerId).orElseThrow(() -> new RuntimeException("Manager not found"));
-
+        User manager = userRepo.findById(managerId).orElseThrow(()-> new CustomRuntimeException("manager not found: "+managerId));
+       
+        // Ensure the assigned user has only the 'USER' role
+        if (!user.getRollList().contains("USER")) {
+            throw new CustomRuntimeException("Tasks can only be assigned to USERS, not Admins or Managers. :");
+        }
+        
         task.setUser(user);
         task.setManager(manager);
 
