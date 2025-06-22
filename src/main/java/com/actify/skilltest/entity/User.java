@@ -44,8 +44,6 @@ public class User implements UserDetails {
 
     @NotBlank(message = "Password cannot be empty")
     @Size(min = 6, message = "Password must be at least 8 characters long")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", 
-             message = "Password must contain at least 1 uppercase letter, 1 digit, and 1 special character")
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)

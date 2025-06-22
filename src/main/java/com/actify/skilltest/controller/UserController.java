@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.actify.skilltest.Service.UserService;
+import com.actify.skilltest.dto.UserWithRolesDTO;
 import com.actify.skilltest.dto.UserWithTasksDTO;
 import com.actify.skilltest.entity.User;
 
@@ -27,6 +28,15 @@ public class UserController {
         User user = userService.findByEmail(email);
         System.out.println("userid is: "+ user.getId() );
         UserWithTasksDTO userProfile = userService.getUserProfileById(user.getId());
+        return new ResponseEntity<>(userProfile, HttpStatus.OK);
+    }
+
+    @GetMapping("/getProfile")
+    public ResponseEntity<UserWithRolesDTO> getprofile(@AuthenticationPrincipal UserDetails userDetails){
+        String email = userDetails.getUsername();   // our username is email address
+        User user = userService.findByEmail(email);
+        System.out.println("userid is: "+ user.getId() );
+        UserWithRolesDTO userProfile = userService.getUserAndRoleById(user.getId());
         return new ResponseEntity<>(userProfile, HttpStatus.OK);
     }
 }

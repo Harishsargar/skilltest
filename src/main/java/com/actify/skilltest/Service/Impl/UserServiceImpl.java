@@ -68,11 +68,15 @@ public class UserServiceImpl implements UserService {
         return users.stream().map(user-> new UserDTO(user.getId(), user.getName(), user.getEmail())).collect(Collectors.toList());
     }
 
-    // this will give the proper representation of the user and their assign tasks
+
+    // only return the list of user and their task that have USER role
     @Override
     public List<UserWithTasksDTO> getAllUsersWithAssignTask() {
         List<User> users = userRepo.findAll();
+    
         return users.stream()
+            .filter(user -> user.getRollList().stream()
+                    .anyMatch(role -> role.equalsIgnoreCase("USER"))) // Filtering users with "USER" role
             .map(user -> {
                 List<TaskDTO> taskDTOs = user.getAssignTasks().stream()
                     .map(task -> new TaskDTO(
@@ -95,6 +99,7 @@ public class UserServiceImpl implements UserService {
             })
             .collect(Collectors.toList());
     }
+    
  
     @Override
     public User updateUser(User user) {

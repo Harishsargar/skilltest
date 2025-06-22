@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.actify.skilltest.Service.UserService;
 import com.actify.skilltest.config.JwtHelper;
 import com.actify.skilltest.dto.AuthRequestDTO;
+import com.actify.skilltest.dto.UserWithRolesDTO;
+import com.actify.skilltest.entity.User;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -25,6 +28,8 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JwtHelper jwtHelper;
@@ -44,8 +49,10 @@ public class AuthController {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = jwtHelper.generateToken(userDetails);
-
-        return ResponseEntity.ok(Map.of("token", token));
+        System.out.println("jwt token: "+token);
+        User user1 = userService.findByEmail(userDetails.getUsername());
+        UserWithRolesDTO user = userService.getUserAndRoleById(user1.getId());
+        return ResponseEntity.ok(Map.of("token", token,"user",user));
 
     } catch (Exception e) {
         System.out.println("Login failed: " + e.getMessage());
